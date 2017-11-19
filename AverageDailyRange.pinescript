@@ -34,23 +34,22 @@ new_period(condition, src) =>
     result = 0.0
     result := condition ? src : result[1]
     result
-adr_high(tf_range, tf_adr, tf_open, tf_high, tf_low, tf_close) =>
-    tf_range < tf_adr ? tf_low + tf_adr : tf_close >= tf_open ? tf_low + tf_adr : tf_high
-adr_low(tf_range, tf_adr, tf_open, tf_high, tf_low, tf_close) =>
-    tf_range < tf_adr ? tf_high - tf_adr : tf_close >= tf_open ? tf_low : tf_high - tf_adr
+adr(length) =>
+    range = high - low
+    sma(range[1], length)
+adr_high(adr_length) =>
+    adr_ = adr(adr_length)
+    (high - low) < adr_ ? low + adr_ : close >= open ? low + adr_ : high
+adr_low(adr_length) =>
+    adr_ = adr(adr_length)
+    (high - low) < adr_ ? high - adr_ : close >= open ? low : high - adr_
+
 
 //
 // Daily
 //
-day_high = security(tickerid, 'D', high, lookahead=barmerge.lookahead_on)
-day_low = security(tickerid, 'D', low, lookahead=barmerge.lookahead_on)
-day_open = security(tickerid, 'D', open, lookahead=barmerge.lookahead_on)
-day_close = security(tickerid, 'D', close, lookahead=barmerge.lookahead_on)
-day_range = day_high - day_low
-day_adr = sma(day_range[1], daily_adr_length)
-
-day_adr_high = adr_high(day_range, day_adr, day_open, day_high, day_low, day_close)
-day_adr_low = adr_low(day_range, day_adr, day_open, day_high, day_low, day_close)
+day_adr_high = security(tickerid, 'D', adr_high(daily_adr_length), lookahead=barmerge.lookahead_on)
+day_adr_low = security(tickerid, 'D', adr_low(daily_adr_length), lookahead=barmerge.lookahead_on)
 
 one_day = 1000 * 60 * 60 * 24
 new_day = daily_adr > 0 and timenow - time < one_day * daily_adr and new_bar("D")
@@ -60,18 +59,12 @@ day_adr_low_ = new_period(new_day, day_adr_low)
 plot(isintraday or isdaily ? day_adr_high_ : na, title="ADR high", style=circles, color=lime, linewidth=2)
 plot(isintraday or isdaily ? day_adr_low_ : na, title="ADR low", style=circles, color=lime, linewidth=2)
 
+
 //
 // Weekly
 //
-week_high = security(tickerid, 'W', high, lookahead=barmerge.lookahead_on)
-week_low = security(tickerid, 'W', low, lookahead=barmerge.lookahead_on)
-week_open = security(tickerid, 'W', open, lookahead=barmerge.lookahead_on)
-week_close = security(tickerid, 'W', close, lookahead=barmerge.lookahead_on)
-week_range = week_high - week_low
-week_adr = sma(week_range[1], weekly_adr_length)
-
-week_adr_high = adr_high(week_range, week_adr, week_open, week_high, week_low, week_close)
-week_adr_low = adr_low(week_range, week_adr, week_open, week_high, week_low, week_close)
+week_adr_high = security(tickerid, 'W', adr_high(weekly_adr_length), lookahead=barmerge.lookahead_on)
+week_adr_low = security(tickerid, 'W', adr_low(weekly_adr_length), lookahead=barmerge.lookahead_on)
 
 one_week = one_day * 7
 new_week = weekly_adr > 0 and timenow - time < one_week * weekly_adr and new_bar("W")
@@ -81,18 +74,12 @@ week_adr_low_ = new_period(new_week, week_adr_low)
 plot(isintraday or isdaily or isweekly ? week_adr_high_ : na, title="AWR high", style=circles, color=orange, linewidth=2)
 plot(isintraday or isdaily or isweekly ? week_adr_low_ : na, title="AWR low", style=circles, color=orange, linewidth=2)
 
+
 //
 // Monthly
 //
-month_high = security(tickerid, 'M', high, lookahead=barmerge.lookahead_on)
-month_low = security(tickerid, 'M', low, lookahead=barmerge.lookahead_on)
-month_open = security(tickerid, 'M', open, lookahead=barmerge.lookahead_on)
-month_close = security(tickerid, 'M', close, lookahead=barmerge.lookahead_on)
-month_range = month_high - month_low
-month_adr = sma(month_range[1], monthly_adr_length)
-
-month_adr_high = adr_high(month_range, month_adr, month_open, month_high, month_low, month_close)
-month_adr_low = adr_low(month_range, month_adr, month_open, month_high, month_low, month_close)
+month_adr_high = security(tickerid, 'M', adr_high(monthly_adr_length), lookahead=barmerge.lookahead_on)
+month_adr_low = security(tickerid, 'M', adr_low(monthly_adr_length), lookahead=barmerge.lookahead_on)
 
 one_month = one_day * 30
 new_month = monthly_adr > 0 and timenow - time < one_month * monthly_adr and new_bar("M")
@@ -102,18 +89,12 @@ month_adr_low_ = new_period(new_month, month_adr_low)
 plot(isintraday or isdwm ? month_adr_high_ : na, title="AMR high", style=circles, color=fuchsia, linewidth=2)
 plot(isintraday or isdwm ? month_adr_low_ : na, title="AMR low", style=circles, color=fuchsia, linewidth=2)
 
+
 //
 // Yearly
 //
-year_high = security(tickerid, '12M', high, lookahead=barmerge.lookahead_on)
-year_low = security(tickerid, '12M', low, lookahead=barmerge.lookahead_on)
-year_open = security(tickerid, '12M', open, lookahead=barmerge.lookahead_on)
-year_close = security(tickerid, '12M', close, lookahead=barmerge.lookahead_on)
-year_range = year_high - year_low
-year_adr = sma(year_range[1], yearly_adr_length)
-
-year_adr_high = adr_high(year_range, year_adr, year_open, year_high, year_low, year_close)
-year_adr_low = adr_low(year_range, year_adr, year_open, year_high, year_low, year_close)
+year_adr_high = security(tickerid, '12M', adr_high(yearly_adr_length), lookahead=barmerge.lookahead_on)
+year_adr_low = security(tickerid, '12M', adr_low(yearly_adr_length), lookahead=barmerge.lookahead_on)
 
 one_year = one_day * 365
 new_year = yearly_adr > 0 and timenow - time < one_year * yearly_adr and new_bar("12M")
