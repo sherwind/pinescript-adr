@@ -5,12 +5,12 @@ This script is based on the "Best ADR Indicator for MT4" described at https://ww
 
 ## Inputs
 
-- `Number of ADR Back`:  Set the number of calendar days back to plot historical ADR. The default value is 7.  Non-trading days are not taken into account.  A value of 7, for example, would display only 5 ADR for a 24x5 market.
-- `Number of AWR Back`: Set the number of calendar weeks back to plot historical AWR. The default value is 0.
-- `Number of AMR Back`: Set the number of calendar months back to plot historical AMR. The default value is 0.
-- `Number of AYR Back`: Set the number of calendar years back to plot historical AYR. The default value is 0.
-- `ADR Length parameter`: Set the length parameter of ADR. The default value is 1.
-- `WDR Length parameter`: Set the length parameter of AWR. The default value is 1.
+- `ADR display limit`: Set the number of historical ADR to display. The default value is 7 calendar days. Non-trading days are not taken into account. A value of 7, for example, would display only 5 ADR for a 24x5 market.
+- `AWR display limit`: Set the number of historical AWR to display. The default value is 0 calendar weeks.
+- `AMR display limit`: Set the number of historical AMR to display. The default value is 0 calendar months.
+- `AYR display limit`: Set the number of historical AYR to display. The default value is 0 calendar years.
+- `ADR Length parameter`: Set the length parameter of ADR. The default value is 5.
+- `WDR Length parameter`: Set the length parameter of AWR. The default value is 5.
 - `MDR Length parameter`: Set the length parameter of AMR. The default value is 1.
 - `YDR Length parameter`: Set the length parameter of AYR. The default value is 1.
 
