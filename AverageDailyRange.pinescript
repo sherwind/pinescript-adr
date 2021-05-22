@@ -32,6 +32,10 @@ daily_adr_length = input(title="ADR Length parameter", type=input.integer, defva
 weekly_adr_length = input(title="AWR Length parameter", type=input.integer, defval=5, minval=0)
 monthly_adr_length = input(title="AMR Length parameter", type=input.integer, defval=1, minval=0)
 yearly_adr_length = input(title="AYR Length parameter", type=input.integer, defval=1, minval=0)
+daily_adr_color = input(title="ADR color", type=input.color, defval=color.lime)
+weekly_adr_color = input(title="AWR color", type=input.color, defval=color.orange)
+monthly_adr_color = input(title="AMR color", type=input.color, defval=color.fuchsia)
+yearly_adr_color = input(title="AYR color", type=input.color, defval=color.red)
 
 new_bar(res) =>
     change(time(res)) != 0
@@ -81,7 +85,7 @@ day_adr      = security(syminfo.tickerid, 'D', adr(daily_adr_length), lookahead=
 day_adr_high = security(syminfo.tickerid, 'D', adr_high(day_adr), lookahead=barmerge.lookahead_on)
 day_adr_low  = security(syminfo.tickerid, 'D', adr_low(day_adr), lookahead=barmerge.lookahead_on)
 if timeframe.isintraday and daily_adr > 0
-    draw_adr_hilo(day_adr_high, day_adr_low, 'D', day_adr, color.lime, daily_adr)
+    draw_adr_hilo(day_adr_high, day_adr_low, 'D', day_adr, daily_adr_color, daily_adr)
 
 
 //
@@ -91,7 +95,7 @@ week_adr      = security(syminfo.tickerid, 'W', adr(weekly_adr_length), lookahea
 week_adr_high = security(syminfo.tickerid, 'W', adr_high(week_adr), lookahead=barmerge.lookahead_on)
 week_adr_low  = security(syminfo.tickerid, 'W', adr_low(week_adr), lookahead=barmerge.lookahead_on)
 if (timeframe.isintraday or timeframe.isdaily) and weekly_adr > 0
-    draw_adr_hilo(week_adr_high, week_adr_low, 'W', week_adr, color.orange, weekly_adr)
+    draw_adr_hilo(week_adr_high, week_adr_low, 'W', week_adr, weekly_adr_color, weekly_adr)
 
 //
 // Monthly
@@ -100,7 +104,7 @@ month_adr      = security(syminfo.tickerid, 'M', adr(monthly_adr_length), lookah
 month_adr_high = security(syminfo.tickerid, 'M', adr_high(month_adr), lookahead=barmerge.lookahead_on)
 month_adr_low  = security(syminfo.tickerid, 'M', adr_low(month_adr), lookahead=barmerge.lookahead_on)
 if (timeframe.isintraday or timeframe.isdaily or timeframe.isweekly) and monthly_adr > 0
-    draw_adr_hilo(month_adr_high, month_adr_low, 'M', month_adr, color.fuchsia, monthly_adr)
+    draw_adr_hilo(month_adr_high, month_adr_low, 'M', month_adr, monthly_adr_color, monthly_adr)
 
 
 //
@@ -110,4 +114,4 @@ year_adr      = security(syminfo.tickerid, '12M', adr(yearly_adr_length), lookah
 year_adr_high = security(syminfo.tickerid, '12M', adr_high(year_adr), lookahead=barmerge.lookahead_on)
 year_adr_low  = security(syminfo.tickerid, '12M', adr_low(year_adr), lookahead=barmerge.lookahead_on)
 if yearly_adr > 0
-    draw_adr_hilo(month_adr_high, month_adr_low, '12M', year_adr, color.red, yearly_adr)
+    draw_adr_hilo(month_adr_high, month_adr_low, '12M', year_adr, yearly_adr_color, yearly_adr)
